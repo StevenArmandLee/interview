@@ -61,7 +61,7 @@ class LoginViewController: UIViewController {
         FIRAuth.auth()?.signInWithEmail(userNameTextField.text!, password: userPasswordTextField.text!, completion: { (user:FIRUser?, error: NSError?) in
             if(error == nil){
                 let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ProfileViewController") as! ProfileViewController
-                controller.userID = user!.uid
+                controller.userID = (user?.uid)!
                 self.presentViewController(controller, animated: true, completion: nil)
             }
             else {

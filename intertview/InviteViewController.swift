@@ -12,15 +12,20 @@ import AddressBook
 import AddressBookUI
 import Contacts
 import ContactsUI
+import PhoneNumberKit
 
-class InviteViewController: UIViewController, MFMessageComposeViewControllerDelegate {
+class InviteViewController: UIViewController, MFMessageComposeViewControllerDelegate, CNContactPickerDelegate, UITextFieldDelegate {
 
+    let phoneNumberKit = PhoneNumberKit()
     @IBOutlet weak var nameTextField: UITextField!
-    @IBOutlet weak var phoneTextField: UITextField!
+    @IBOutlet weak var phoneNumberTextField: PhoneNumberTextField!
+    
     let addressBookRef: ABAddressBook = ABAddressBookCreateWithOptions(nil, nil).takeRetainedValue()
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        nameTextField.removeBorder()
+        phoneNumberTextField.removeBorder()
+        phoneNumberTextField.delegate = self
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
         view.addGestureRecognizer(tap)
         // Do any additional setup after loading the view.
@@ -33,13 +38,33 @@ class InviteViewController: UIViewController, MFMessageComposeViewControllerDele
     func dismissKeyboard() {
         view.endEditing(true)
     }
-    @IBAction func onInvite(sender: AnyObject) {
+    
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange,replacementString string: String) -> Bool {
         
+        // Create an `NSCharacterSet` set which includes everything *but* the digits
+        let inverseSet = NSCharacterSet(charactersInString:"+0123456789").invertedSet
+        
+        // At every character in this "inverseSet" contained in the string,
+        // split the string up into components which exclude the characters
+        // in this inverse set
+        let components = string.componentsSeparatedByCharactersInSet(inverseSet)
+        
+        // Rejoin these components
+        let filtered = components.joinWithSeparator("")  // use join("", components) if you are using Swift 1.2
+        
+        // If the original string is equal to the filtered string, i.e. if no
+        // inverse characters were present to be eliminated, the input is valid
+        // and the statement returns true; else it returns false
+        return string == filtered
+    }
+    
+    @IBAction func onInvite(sender: AnyObject) {
+        print(phoneNumberTextField.isValidNumber)
         if(MFMessageComposeViewController.canSendText()){
             var messageVC = MFMessageComposeViewController()
             
             messageVC.body = "Hi " + nameTextField.text! + ", I would like you to join me on Connected Life! Please download the CoLife app and accept my invitation: url"
-            messageVC.recipients = [phoneTextField.text!]
+            messageVC.recipients = [phoneNumberTextField.text!]
             messageVC.messageComposeDelegate = self
             
             self.presentViewController(messageVC, animated: true, completion: nil)
@@ -69,24 +94,20 @@ class InviteViewController: UIViewController, MFMessageComposeViewControllerDele
             break;
         }
     }
-    
+    func contactPicker(picker: CNContactPickerViewController, didSelectContact contact: CNContact) {
+        print(contact.givenName)
+        print((contact.phoneNumbers[0].value as! CNPhoneNumber).valueForKey("digits") as! String)
+    }
+    func contactPickerDidCancel(picker: CNContactPickerViewController) {
+        
+    }
     
     @IBAction func onSearchContact(sender: AnyObject) {
-        let authorizationStatus = CNContactStore.authorizationStatusForEntityType(.Contacts)
+        let contactPicker = CNContactPickerViewController()
+        contactPicker.view.backgroundColor = UIColor.blackColor()
+        contactPicker.delegate = self
         
-        switch authorizationStatus {
-        case .Denied, .Restricted:
-            print("Denied")
-            break
-        case .Authorized:
-            print("Authorized")
-            break
-        case .NotDetermined:
-            print("not determined")
-            break
-        default:
-            break
-        }
+        self.presentViewController(contactPicker, animated: true, completion: nil)
     }
     
     

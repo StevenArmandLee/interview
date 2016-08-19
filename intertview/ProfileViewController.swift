@@ -8,6 +8,7 @@
 
 import UIKit
 import Foundation
+import Firebase
 import FirebaseAuth
 import FirebaseDatabase
 import FirebaseStorage
@@ -18,25 +19,56 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var phoneNumberLabel: UILabel!
     @IBOutlet weak var emailLabel: UILabel!
     var userID = ""
+    let rootRef = FIRDatabase.database().reference()
     override func viewDidLoad() {
-        print (userID)
-        var userInformations = [String:String]()
         super.viewDidLoad()
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            //All background running put here
-            let databaseModel =  DatabaseModel()
-            databaseModel.getDataFromDatabase(self.userID, complition: { (userInformation, error) in
-                userInformations = userInformation
-                self.nameLabel.text = userInformations["Name"]
-                self.emailLabel.text = userInformations["Email"]
-                self.phoneNumberLabel.text = userInformations["Phone"]
-                self.putPhotoToUI(self.downloadImage(NSURL(string: userInformations["Picture"]!)!))
-                
+        
+    }
+    override func viewDidAppear(animated: Bool) {
+            //self.getData()
+        let databaseModel = DatabaseModel()
+        databaseModel.getDataFromDatabase(self.userID, complition: { (userInformation, error) in
+            let userInformations = userInformation
+            self.nameLabel.text = userInformations["Name"]
+            self.emailLabel.text = userInformations["Email"]
+            self.phoneNumberLabel.text = userInformations["Phone"]
+            self.putPhotoToUI(self.downloadImage(NSURL(string: userInformations["Picture"]!)!))
+        })
+
+        
+    }
+    
+    func getData() {
+        FIRAuth.auth()?.addAuthStateDidChangeListener({ (auth: FIRAuth,user: FIRUser?) in
+            self.rootRef.child(self.userID).observeSingleEventOfType(.Value, withBlock: { (snapshot: FIRDataSnapshot) in
+                if let dict = snapshot.value as? Dictionary<String,String> {
+                    self.nameLabel.text = dict["Name"]
+                    self.emailLabel.text = dict["Email"]
+                    self.phoneNumberLabel.text = dict["Phone"]
+                    self.putPhotoToUI(self.downloadImage(NSURL(string: dict["Picture"]!)!))
+                    
+                }
             })
-                        dispatch_async(dispatch_get_main_queue()){
-                [weak self] in
-            }
-        }
+
+            
+//            var handle = self.rootRef.child((user?.uid)!).observeEventType(.Value) { (snapshot: FIRDataSnapshot) in
+//                if let dict = snapshot.value as? Dictionary<String,String> {
+//                    self.nameLabel.text = dict["Name"]
+//                    self.emailLabel.text = dict["Email"]
+//                    self.phoneNumberLabel.text = dict["Phone"]
+//                    self.putPhotoToUI(self.downloadImage(NSURL(string: dict["Picture"]!)!))
+//                    
+//                }}
+//            self.rootRef.removeObserverWithHandle(handle)
+//            print("aaa")
+//            databaseModel.getDataFromDatabase((user?.uid)!, complition: { (userInformation, error) in
+//                let userInformations = userInformation
+//                self.nameLabel.text = userInformations["Name"]
+//                self.emailLabel.text = userInformations["Email"]
+//                self.phoneNumberLabel.text = userInformations["Phone"]
+//                self.putPhotoToUI(self.downloadImage(NSURL(string: userInformations["Picture"]!)!))
+//            })
+        })
     }
     func putPhotoToUI(image: UIImage) {
         let scale = 150/image.size.width
@@ -77,7 +109,9 @@ class ProfileViewController: UIViewController {
     
     @IBAction func onLogOut(sender: AnyObject) {
         do {
-            try FIRAuth.auth()?.signOut()
+            try! FIRAuth.auth()?.signOut()
+            let controller = self.storyboard?.instantiateViewControllerWithIdentifier("LoginRegisterViewController") as! LoginRegisterViewController
+            self.presentViewController(controller, animated: false, completion: nil)
         } catch let error {
             print (error)
         }

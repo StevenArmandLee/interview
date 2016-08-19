@@ -9,12 +9,14 @@
 import UIKit
 import FirebaseAuth
 import CoreTelephony
+import PhoneNumberKit
 
-class RegisterViewController: UIViewController {
+class RegisterViewController: UIViewController,UITextFieldDelegate {
 
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
-    @IBOutlet weak var mobileNumberTextField: UITextField!
+    @IBOutlet weak var mobileNumberTextField: PhoneNumberTextField!
+  
     @IBOutlet weak var passwordTextField: UITextField!
     
     
@@ -33,6 +35,7 @@ class RegisterViewController: UIViewController {
         emailTextField.removeBorder()
         mobileNumberTextField.removeBorder()
         passwordTextField.removeBorder()
+        mobileNumberTextField.delegate = self
         mobileNumberTextField.text = "+"+getPhoneCountryCode()
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
         view.addGestureRecognizer(tap)
@@ -41,6 +44,81 @@ class RegisterViewController: UIViewController {
     func dismissKeyboard() {
         view.endEditing(true)
     }
+    
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange,replacementString string: String) -> Bool {
+        
+        // Create an `NSCharacterSet` set which includes everything *but* the digits
+        let inverseSet = NSCharacterSet(charactersInString:"0123456789+").invertedSet
+        
+        // At every character in this "inverseSet" contained in the string,
+        // split the string up into components which exclude the characters
+        // in this inverse set
+        let components = string.componentsSeparatedByCharactersInSet(inverseSet)
+        
+        // Rejoin these components
+        let filtered = components.joinWithSeparator("")  // use join("", components) if you are using Swift 1.2
+        
+        // If the original string is equal to the filtered string, i.e. if no
+        // inverse characters were present to be eliminated, the input is valid
+        // and the statement returns true; else it returns false
+        return string == filtered
+    }
+    func isValidEmail(testStr:String) -> Bool {
+        // print("validate calendar: \(testStr)")
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
+        
+        let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        return emailTest.evaluateWithObject(testStr)
+    }
+    func isValidPassword(candidate: String) -> Bool {
+        let passwordRegex = "(?=.*[a-z])(.*[A-Z])(.*\\d).{6,15}"
+        
+        return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluateWithObject(candidate)
+    }
+    func removeAllMessageLabel() {
+        nameMessageLabel.hidden = true
+        emailMesageLabel.hidden = true
+        mobileNumberMessageNumber.hidden = true
+        passwordMessageLabel.hidden = true
+    }
+    func checkInput() -> Bool {
+        removeAllMessageLabel()
+        var isValid = true
+        if nameTextField.text == "" {
+            nameMessageLabel.hidden = false
+            isValid = false
+        }
+        if emailTextField.text == "" || isValidEmail(emailTextField.text!) == false {
+            emailMesageLabel.hidden = false
+            isValid = false
+        }
+        else {
+            FIRAuth.auth()?.fetchProvidersForEmail(emailTextField.text!, completion: { (email:[String]?,error: NSError?) in
+                print(email)
+                if email != nil {
+                    
+                }
+                else {
+                    self.emailMesageLabel.hidden = false
+                    isValid = false
+                }
+            })
+        }
+        if mobileNumberTextField.isValidNumber == false {
+            mobileNumberMessageNumber.hidden = false
+            isValid = false
+        }
+        if passwordTextField.text == "" || isValidPassword(passwordTextField.text!) == false {
+            passwordMessageLabel.hidden = false
+            isValid = false
+        }
+        
+        
+        
+        
+        return isValid
+    }
+    
     func getCountryPhonceCode (country : String) -> String
     {
         
@@ -273,17 +351,7 @@ class RegisterViewController: UIViewController {
     
   
     @IBAction func onRegister(sender: AnyObject) {
-        FIRAuth.auth()?.fetchProvidersForEmail(emailTextField.text!, completion: { (email:[String]?,error: NSError?) in
-            print(email)
-            if email != nil {
-                self.emailMesageLabel.hidden = false
-            }
-            else {
-                self.emailMesageLabel.hidden = true
-                
-            }
-        })
-        
+        checkInput()
         let controller = self.storyboard?.instantiateViewControllerWithIdentifier("AuthenticationViewController") as! AuthenticationViewController
         controller.email = emailTextField.text!
         controller.phoneNumber = mobileNumberTextField.text!

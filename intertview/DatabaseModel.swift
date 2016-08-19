@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Firebase
 import FirebaseAuth
 import FirebaseDatabase
 import FirebaseStorage
@@ -14,17 +15,19 @@ import UIKit
 class DatabaseModel {
     let rootRef = FIRDatabase.database().reference()
     
+    
     func sendToDatabase(email: String, name: String, phone: String, picture: String, userID: String) {
         let userData = ["Email": email, "Name": name, "Phone": phone, "Picture": picture]
-        rootRef.child(userID).setValue(userData)
+        //rootRef.child(userID).setValue(userData)
+        rootRef.childByAppendingPath(userID).setValue(userData)
     }
     func getDataFromDatabase(userID: String, complition: (userInformation: Dictionary<String,String>!, error:NSError?)->()) {
-        
-        rootRef.child(userID).observeEventType(.Value) { (snapshot: FIRDataSnapshot) in
+
+        rootRef.child(userID).observeSingleEventOfType(.Value, withBlock: { (snapshot: FIRDataSnapshot) in
             if let dict = snapshot.value as? Dictionary<String,String> {
                 complition(userInformation: dict,error: nil)
             }
-        }
+        })
     }
     
     func sendPicture(picture: UIImage, email: String, name: String, phone: String, userID: String) {

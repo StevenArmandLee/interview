@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 import FirebaseAuth
 import FirebaseDatabase
-class AuthenticationViewController: UIViewController {
+class AuthenticationViewController: UIViewController,UITextFieldDelegate{
 
     @IBOutlet weak var verifyButton: UIButton!
     @IBOutlet weak var scrollView: UIScrollView!
@@ -24,6 +24,7 @@ class AuthenticationViewController: UIViewController {
     var verificationCode = ""
     override func viewDidLoad() {
         super.viewDidLoad()
+        codeTextField.delegate = self
        codeTextField.removeBorder()
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
         view.addGestureRecognizer(tap)
@@ -37,6 +38,24 @@ class AuthenticationViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange,replacementString string: String) -> Bool {
+        
+        // Create an `NSCharacterSet` set which includes everything *but* the digits
+        let inverseSet = NSCharacterSet(charactersInString:"0123456789").invertedSet
+        
+        // At every character in this "inverseSet" contained in the string,
+        // split the string up into components which exclude the characters
+        // in this inverse set
+        let components = string.componentsSeparatedByCharactersInSet(inverseSet)
+        
+        // Rejoin these components
+        let filtered = components.joinWithSeparator("")  // use join("", components) if you are using Swift 1.2
+        
+        // If the original string is equal to the filtered string, i.e. if no
+        // inverse characters were present to be eliminated, the input is valid
+        // and the statement returns true; else it returns false
+        return string == filtered
     }
     
     @IBAction func onResendCode(sender: AnyObject) {
