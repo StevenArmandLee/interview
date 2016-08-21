@@ -58,16 +58,32 @@ class LoginViewController: UIViewController {
     
     
     @IBAction func onSignIn(sender: AnyObject) {
-        FIRAuth.auth()?.signInWithEmail(userNameTextField.text!, password: userPasswordTextField.text!, completion: { (user:FIRUser?, error: NSError?) in
-            if(error == nil){
-                let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ProfileViewController") as! ProfileViewController
-                controller.userID = (user?.uid)!
-                self.presentViewController(controller, animated: true, completion: nil)
+        emailMessageLabel.hidden = true
+        passwordMessageLabel.hidden = true
+
+        if userNameTextField.text != "" && userPasswordTextField.text != "" {
+            if(InformationValidator.isValidEmail(userNameTextField.text!) == false){
+                emailMessageLabel.hidden = false
             }
             else {
-                print(error?.localizedDescription)
+                FIRAuth.auth()?.signInWithEmail(userNameTextField.text!, password: userPasswordTextField.text!, completion: { (user:FIRUser?, error: NSError?) in
+                    if(error == nil){
+                        let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ProfileViewController") as! ProfileViewController
+                        controller.userID = (user?.uid)!
+                        self.presentViewController(controller, animated: true, completion: nil)
+                    }
+                    else {
+                        if error?.code == 17011 {
+                            self.emailMessageLabel.hidden = false
+                        }
+                        else if error?.code == 17009 {
+                            self.passwordMessageLabel.hidden = false
+                        }
+                    }
+                })
             }
-        })
+        }
+        
         
     }
     

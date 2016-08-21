@@ -13,12 +13,18 @@ import AddressBookUI
 import Contacts
 import ContactsUI
 import PhoneNumberKit
+import FirebaseAuth
+import FirebaseDatabase
+import FirebaseStorage
 
 class InviteViewController: UIViewController, MFMessageComposeViewControllerDelegate, CNContactPickerDelegate, UITextFieldDelegate {
 
     let phoneNumberKit = PhoneNumberKit()
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var phoneNumberTextField: PhoneNumberTextField!
+    @IBOutlet weak var inviteTitleLabel: UILabel!
+    @IBOutlet weak var nameMessageLabel: UILabel!
+    @IBOutlet weak var numberMessageLabel: UILabel!
     
     let addressBookRef: ABAddressBook = ABAddressBookCreateWithOptions(nil, nil).takeRetainedValue()
     override func viewDidLoad() {
@@ -59,16 +65,27 @@ class InviteViewController: UIViewController, MFMessageComposeViewControllerDele
     }
     
     @IBAction func onInvite(sender: AnyObject) {
-        print(phoneNumberTextField.isValidNumber)
-        if(MFMessageComposeViewController.canSendText()){
-            var messageVC = MFMessageComposeViewController()
-            
-            messageVC.body = "Hi " + nameTextField.text! + ", I would like you to join me on Connected Life! Please download the CoLife app and accept my invitation: url"
-            messageVC.recipients = [phoneNumberTextField.text!]
-            messageVC.messageComposeDelegate = self
-            
-            self.presentViewController(messageVC, animated: true, completion: nil)
+        nameMessageLabel.hidden = true
+        numberMessageLabel.hidden = true
+        if nameTextField.text == "" {
+            nameMessageLabel.hidden = false
         }
+        if phoneNumberTextField.text == "" {
+            numberMessageLabel.hidden = false
+        }
+        
+        if nameTextField.text != "" && phoneNumberTextField.text != "" {
+            if(MFMessageComposeViewController.canSendText()){
+                var messageVC = MFMessageComposeViewController()
+                
+                messageVC.body = "Hi " + nameTextField.text! + ", I would like you to join me on Connected Life! Please download the CoLife app and accept my invitation: url"
+                messageVC.recipients = [phoneNumberTextField.text!]
+                messageVC.messageComposeDelegate = self
+                
+                self.presentViewController(messageVC, animated: true, completion: nil)
+            }
+        }
+        
         
         
     }
@@ -87,6 +104,7 @@ class InviteViewController: UIViewController, MFMessageComposeViewControllerDele
             })
         case MessageComposeResultSent:
             print("Message was sent")
+            inviteTitleLabel.text = "Invite another friend"
             self.dismissViewControllerAnimated(true, completion: {
                 
             })
@@ -95,8 +113,8 @@ class InviteViewController: UIViewController, MFMessageComposeViewControllerDele
         }
     }
     func contactPicker(picker: CNContactPickerViewController, didSelectContact contact: CNContact) {
-        print(contact.givenName)
-        print((contact.phoneNumbers[0].value as! CNPhoneNumber).valueForKey("digits") as! String)
+        nameTextField.text = contact.givenName
+        phoneNumberTextField.text = (contact.phoneNumbers[0].value as! CNPhoneNumber).valueForKey("digits") as! String
     }
     func contactPickerDidCancel(picker: CNContactPickerViewController) {
         
@@ -111,14 +129,17 @@ class InviteViewController: UIViewController, MFMessageComposeViewControllerDele
     }
     
     
-    /*
-    // MARK: - Navigation
+    @IBAction func onSkip(sender: AnyObject) {
+        FIRAuth.auth()?.addAuthStateDidChangeListener({ (auth: FIRAuth,user: FIRUser?) in
+            if user != nil {
+                let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ProfileViewController") as! ProfileViewController
+                controller.userID = (user?.uid)!
+                self.presentViewController(controller, animated: false, completion: nil)
+            }
+            else {
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+            }
+        })
     }
-    */
-
+   
 }

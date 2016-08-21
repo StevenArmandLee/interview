@@ -63,61 +63,57 @@ class RegisterViewController: UIViewController,UITextFieldDelegate {
         // and the statement returns true; else it returns false
         return string == filtered
     }
-    func isValidEmail(testStr:String) -> Bool {
-        // print("validate calendar: \(testStr)")
-        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
-        
-        let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
-        return emailTest.evaluateWithObject(testStr)
-    }
-    func isValidPassword(candidate: String) -> Bool {
-        let passwordRegex = "(?=.*[a-z])(.*[A-Z])(.*\\d).{6,15}"
-        
-        return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluateWithObject(candidate)
-    }
     func removeAllMessageLabel() {
         nameMessageLabel.hidden = true
         emailMesageLabel.hidden = true
         mobileNumberMessageNumber.hidden = true
         passwordMessageLabel.hidden = true
     }
-    func checkInput() -> Bool {
-        removeAllMessageLabel()
+    
+    func checkIfEmptyInput() -> Bool {
         var isValid = true
         if nameTextField.text == "" {
             nameMessageLabel.hidden = false
             isValid = false
         }
-        if emailTextField.text == "" || isValidEmail(emailTextField.text!) == false {
-            emailMesageLabel.hidden = false
-            isValid = false
-        }
-        else {
-            FIRAuth.auth()?.fetchProvidersForEmail(emailTextField.text!, completion: { (email:[String]?,error: NSError?) in
-                print(email)
-                if email != nil {
-                    
-                }
-                else {
-                    self.emailMesageLabel.hidden = false
-                    isValid = false
-                }
-            })
-        }
         if mobileNumberTextField.isValidNumber == false {
             mobileNumberMessageNumber.hidden = false
             isValid = false
         }
-        if passwordTextField.text == "" || isValidPassword(passwordTextField.text!) == false {
+        if passwordTextField.text == "" || InformationValidator.isValidPassword(passwordTextField.text!) == false {
             passwordMessageLabel.hidden = false
             isValid = false
         }
-        
-        
-        
-        
         return isValid
     }
+    
+    func checkInput(completion: (isValid: Bool) -> Void) {
+        var isValid = true
+        removeAllMessageLabel()
+        isValid = checkIfEmptyInput()
+        if emailTextField.text == "" || InformationValidator.isValidEmail(emailTextField.text!) == false {
+            emailMesageLabel.hidden = false
+            isValid = false
+            isValid = checkIfEmptyInput()
+        }
+        else {
+            FIRAuth.auth()?.fetchProvidersForEmail(emailTextField.text!, completion: { (email:[String]?,error: NSError?) in
+                if email != nil {
+                    isValid = self.checkIfEmptyInput()
+                    self.emailMesageLabel.hidden = false
+                    isValid = false
+                }
+                else {
+                    
+                    isValid = self.checkIfEmptyInput()
+                }
+            })
+        }
+        
+        completion(isValid: isValid)
+    }
+    
+    
     
     func getCountryPhonceCode (country : String) -> String
     {
@@ -351,13 +347,19 @@ class RegisterViewController: UIViewController,UITextFieldDelegate {
     
   
     @IBAction func onRegister(sender: AnyObject) {
-        checkInput()
-        let controller = self.storyboard?.instantiateViewControllerWithIdentifier("AuthenticationViewController") as! AuthenticationViewController
-        controller.email = emailTextField.text!
-        controller.phoneNumber = mobileNumberTextField.text!
-        controller.name = nameTextField.text!
-        controller.password = passwordTextField.text!
-        self.presentViewController(controller, animated: true, completion: nil)
+        checkInput { (isValid) in
+            if isValid {
+                let controller = self.storyboard?.instantiateViewControllerWithIdentifier("AuthenticationViewController") as! AuthenticationViewController
+                controller.email = self.emailTextField.text!
+                controller.phoneNumber = self.mobileNumberTextField.text!
+                controller.name = self.nameTextField.text!
+                controller.password = self.passwordTextField.text!
+                self.presentViewController(controller, animated: true, completion: nil)
+            }
+        }
+        
+        
+        
         
     }
     

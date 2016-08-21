@@ -26,29 +26,33 @@ class ProfileViewController: UIViewController {
     }
     override func viewDidAppear(animated: Bool) {
             //self.getData()
+        getData()
+
+        
+    }
+    
+    func getData() {
         let databaseModel = DatabaseModel()
         databaseModel.getDataFromDatabase(self.userID, complition: { (userInformation, error) in
             let userInformations = userInformation
             self.nameLabel.text = userInformations["Name"]
             self.emailLabel.text = userInformations["Email"]
             self.phoneNumberLabel.text = userInformations["Phone"]
-            self.putPhotoToUI(self.downloadImage(NSURL(string: userInformations["Picture"]!)!))
+            if userInformations["Picture"]! != "" {
+                self.putPhotoToUI(self.downloadImage(NSURL(string: userInformations["Picture"]!)!))
+            }
         })
-
-        
-    }
-    
-    func getData() {
-        FIRAuth.auth()?.addAuthStateDidChangeListener({ (auth: FIRAuth,user: FIRUser?) in
-            self.rootRef.child(self.userID).observeSingleEventOfType(.Value, withBlock: { (snapshot: FIRDataSnapshot) in
-                if let dict = snapshot.value as? Dictionary<String,String> {
-                    self.nameLabel.text = dict["Name"]
-                    self.emailLabel.text = dict["Email"]
-                    self.phoneNumberLabel.text = dict["Phone"]
-                    self.putPhotoToUI(self.downloadImage(NSURL(string: dict["Picture"]!)!))
-                    
-                }
-            })
+//        FIRAuth.auth()?.addAuthStateDidChangeListener({ (auth: FIRAuth,user: FIRUser?) in
+//            self.rootRef.child(self.userID).observeSingleEventOfType(.Value, withBlock: { (snapshot: FIRDataSnapshot) in
+//                if let dict = snapshot.value as? Dictionary<String,String> {
+//                    self.nameLabel.text = dict["Name"]
+//                    self.emailLabel.text = dict["Email"]
+//                    self.phoneNumberLabel.text = dict["Phone"]
+//                    if dict["Picture"]! != "" {
+//                        self.putPhotoToUI(self.downloadImage(NSURL(string: dict["Picture"]!)!))
+//                    }
+//                }
+//            })
 
             
 //            var handle = self.rootRef.child((user?.uid)!).observeEventType(.Value) { (snapshot: FIRDataSnapshot) in
@@ -68,7 +72,7 @@ class ProfileViewController: UIViewController {
 //                self.phoneNumberLabel.text = userInformations["Phone"]
 //                self.putPhotoToUI(self.downloadImage(NSURL(string: userInformations["Picture"]!)!))
 //            })
-        })
+        //})
     }
     func putPhotoToUI(image: UIImage) {
         let scale = 150/image.size.width

@@ -52,11 +52,15 @@ class AuthenticationViewController: UIViewController,UITextFieldDelegate{
         // Rejoin these components
         let filtered = components.joinWithSeparator("")  // use join("", components) if you are using Swift 1.2
         
-        // If the original string is equal to the filtered string, i.e. if no
-        // inverse characters were present to be eliminated, the input is valid
-        // and the statement returns true; else it returns false
-        return string == filtered
+        //To limit the input
+        guard let text = textField.text else { return true }
+        
+        let newLength = text.characters.count + string.characters.count - range.length
+
+        
+        return string == filtered && newLength <= 4
     }
+    
     
     @IBAction func onResendCode(sender: AnyObject) {
         let authenticationModel = AuthenticationModel()
@@ -110,5 +114,6 @@ class AuthenticationViewController: UIViewController,UITextFieldDelegate{
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
             self.view.frame.origin.y += keyboardSize.height
         }    }
+    
 
 }

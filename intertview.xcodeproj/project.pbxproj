@@ -23,6 +23,7 @@
 		56C0C1C31D61F53F003B13F9 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C0C1C21D61F53F003B13F9 /* LoginViewController.swift */; };
 		56C0C1C51D61F555003B13F9 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C0C1C41D61F555003B13F9 /* RegisterViewController.swift */; };
 		56C0C1C71D6200B2003B13F9 /* textFieldExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C0C1C61D6200B2003B13F9 /* textFieldExtension.swift */; };
+		56C3AFD31D69DE8A00ECE020 /* InformationValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C3AFD21D69DE8A00ECE020 /* InformationValidator.swift */; };
 		56D41B1C1D64497000BFD4AE /* DatabaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D41B1B1D64497000BFD4AE /* DatabaseModel.swift */; };
 		56D41B1E1D64638300BFD4AE /* UploadPictureViewContoller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D41B1D1D64638300BFD4AE /* UploadPictureViewContoller.swift */; };
 		56D41B221D6468BC00BFD4AE /* WikiFace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D41B211D6468BC00BFD4AE /* WikiFace.swift */; };
@@ -78,6 +79,7 @@
 		56C0C1C21D61F53F003B13F9 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		56C0C1C41D61F555003B13F9 /* RegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		56C0C1C61D6200B2003B13F9 /* textFieldExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = textFieldExtension.swift; sourceTree = "<group>"; };
+		56C3AFD21D69DE8A00ECE020 /* InformationValidator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InformationValidator.swift; sourceTree = "<group>"; };
 		56D41B1B1D64497000BFD4AE /* DatabaseModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseModel.swift; sourceTree = "<group>"; };
 		56D41B1D1D64638300BFD4AE /* UploadPictureViewContoller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadPictureViewContoller.swift; sourceTree = "<group>"; };
 		56D41B211D6468BC00BFD4AE /* WikiFace.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WikiFace.swift; sourceTree = "<group>"; };
@@ -145,6 +147,7 @@
 				56D41B231D646CE000BFD4AE /* ImageMasker.swift */,
 				56D41B211D6468BC00BFD4AE /* WikiFace.swift */,
 				56C0C1C61D6200B2003B13F9 /* textFieldExtension.swift */,
+				56C3AFD21D69DE8A00ECE020 /* InformationValidator.swift */,
 			);
 			name = Helper;
 			sourceTree = "<group>";
@@ -370,6 +373,7 @@
 				56D41B221D6468BC00BFD4AE /* WikiFace.swift in Sources */,
 				56C0C1C31D61F53F003B13F9 /* LoginViewController.swift in Sources */,
 				567FB2511D66ADB300C05BB2 /* InviteViewController.swift in Sources */,
+				56C3AFD31D69DE8A00ECE020 /* InformationValidator.swift in Sources */,
 				56C0C1C71D6200B2003B13F9 /* textFieldExtension.swift in Sources */,
 				56C0C1B31D61F3F3003B13F9 /* LoginRegisterViewController.swift in Sources */,
 				56641EDE1D633F91007905E4 /* AuthenticationViewController.swift in Sources */,
