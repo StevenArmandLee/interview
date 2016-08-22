@@ -84,6 +84,9 @@ class RegisterViewController: UIViewController,UITextFieldDelegate {
             passwordMessageLabel.hidden = false
             isValid = false
         }
+        if InformationValidator.isValidEmail(emailTextField.text!) == false {
+            emailMesageLabel.hidden = false
+        }
         return isValid
     }
     
@@ -91,26 +94,34 @@ class RegisterViewController: UIViewController,UITextFieldDelegate {
         var isValid = true
         removeAllMessageLabel()
         isValid = checkIfEmptyInput()
-        if emailTextField.text == "" || InformationValidator.isValidEmail(emailTextField.text!) == false {
+        if emailTextField.text == "" {
             emailMesageLabel.hidden = false
             isValid = false
             isValid = checkIfEmptyInput()
         }
         else {
-            FIRAuth.auth()?.fetchProvidersForEmail(emailTextField.text!, completion: { (email:[String]?,error: NSError?) in
-                if email != nil {
-                    isValid = self.checkIfEmptyInput()
-                    self.emailMesageLabel.hidden = false
-                    isValid = false
-                }
-                else {
-                    
-                    isValid = self.checkIfEmptyInput()
-                }
-            })
+            print (InformationValidator.isValidEmail(emailTextField.text!))
+            if InformationValidator.isValidEmail(emailTextField.text!) {
+                FIRAuth.auth()?.fetchProvidersForEmail(emailTextField.text!, completion: { (email:[String]?,error: NSError?) in
+                    if email != nil {
+                        isValid = self.checkIfEmptyInput()
+                        self.emailMesageLabel.hidden = false
+                        isValid = false
+                        
+                    }
+                    else {
+                        
+                        
+                    }
+                    completion(isValid: isValid)
+                })
+            }
+            else {
+                isValid = self.checkIfEmptyInput()
+            }
         }
         
-        completion(isValid: isValid)
+        
     }
     
     

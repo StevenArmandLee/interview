@@ -883,7 +883,7 @@ Add your Profile Photo</string>
                                     <segue destination="aNu-ds-4DI" kind="show" id="Gwz-tS-J6d"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MwK-Ap-gPJ">
+                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MwK-Ap-gPJ">
                                 <rect key="frame" x="236" y="516" width="129" height="38"/>
                                 <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -893,6 +893,9 @@ Add your Profile Photo</string>
                                 <state key="normal" title="Next">
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
+                                <connections>
+                                    <segue destination="aNu-ds-4DI" kind="show" id="mdt-ug-tjz"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -913,6 +916,7 @@ Add your Profile Photo</string>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="nextButton" destination="MwK-Ap-gPJ" id="8nD-Ea-lJ3"/>
                         <outlet property="profilePicture" destination="EGb-aG-M9F" id="AXm-oI-IaE"/>
                     </connections>
                 </viewController>
@@ -925,4 +929,7 @@ Add your Profile Photo</string>
         <image name="AuthorBackground" width="123" height="123"/>
         <image name="avatarBig" width="117" height="117"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="mdt-ug-tjz"/>
+    </inferredMetricsTieBreakers>
 </document>

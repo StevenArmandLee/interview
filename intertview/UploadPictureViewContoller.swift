@@ -15,8 +15,10 @@ class UploadPictureViewContoller: UIViewController, UIImagePickerControllerDeleg
 
     var userID = ""
     
+    @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var profilePicture: UIImageView!
     @IBAction func onUpdatePhoto(sender: AnyObject) {
+        
         let actionSheet = UIAlertController(title: "Camera", message: nil, preferredStyle: .ActionSheet)
         actionSheet.addAction(UIAlertAction(title: "Camera", style: .Default, handler: { action in
             self.showCamera()
@@ -68,6 +70,7 @@ class UploadPictureViewContoller: UIViewController, UIImagePickerControllerDeleg
             //TODO change to the real information
             databaseModel.getDataFromDatabase(self.userID, complition: { (userInformation, error) in
                 databaseModel.sendPicture(image, email: userInformation["Email"]!, name: userInformation["Name"]!, phone: userInformation["Phone"]!, userID: self.userID)
+                self.nextButton.enabled = true
             })
         })
 

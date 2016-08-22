@@ -17,7 +17,7 @@ class InformationValidator: NSObject {
         return emailTest.evaluateWithObject(testStr)
     }
     class func isValidPassword(candidate: String) -> Bool {
-        let passwordRegex = "(?=.*[a-z])(.*[A-Z])(.*\\d).{6,15}"
+        let passwordRegex = "(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{6,15}"
         
         return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluateWithObject(candidate)
     }
