@@ -10,14 +10,14 @@ import Foundation
 
 class AuthenticationModel {
     var token: UInt32 = 0
-    func sendSMS(){
+    func sendSMS(phoneNumber: String){
         token = arc4random_uniform(8999) + 1000
         let twilioSID = "AC674cd18bc56c46fa43caefe57a145150"
         let twilioSecret = "0effb1cf5e577b37fefe02c25af431b9"
         
         //Note replace + = %2B , for To and From phone number
         let fromNumber = "%2B13158832810"// actual number is +14803606445
-        let toNumber = "%2B6584211748"// actual number is +919152346132
+        let toNumber = "%2B"+phoneNumber.stringByReplacingOccurrencesOfString("+", withString: "")// actual number is +919152346132
         let message = "Your verification code is \(token) for signup with Interview App "
         
         // Build the request

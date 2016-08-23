@@ -31,7 +31,7 @@ class AuthenticationViewController: UIViewController,UITextFieldDelegate{
         registerForKeyboardNotifications()
         
         let authenticationModel = AuthenticationModel()
-        authenticationModel.sendSMS()
+        authenticationModel.sendSMS(phoneNumber)
         verificationCode = String(authenticationModel.token)
     }
 
@@ -64,7 +64,7 @@ class AuthenticationViewController: UIViewController,UITextFieldDelegate{
     
     @IBAction func onResendCode(sender: AnyObject) {
         let authenticationModel = AuthenticationModel()
-        authenticationModel.sendSMS()
+        authenticationModel.sendSMS(phoneNumber)
         verificationCode = String(authenticationModel.token)
     }
     @IBAction func onVerify(sender: AnyObject) {

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		563104BA1D62A97E00B0E076 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 563104B91D62A97E00B0E076 /* GoogleService-Info.plist */; };
+		565BBB211D6C7726004FC2E1 /* CountryCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 565BBB201D6C7726004FC2E1 /* CountryCode.swift */; };
 		56641EC81D6314C6007905E4 /* AuthenticationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56641EC71D6314C6007905E4 /* AuthenticationModel.swift */; };
 		56641ED21D631EBC007905E4 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56641ED11D631EBC007905E4 /* KeyboardViewController.swift */; };
 		56641ED61D631EBC007905E4 /* TokenKeyboard.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 56641ECF1D631EBC007905E4 /* TokenKeyboard.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -60,6 +61,7 @@
 		0F616281664EC1463E1C57F7 /* Pods-intertview.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-intertview.debug.xcconfig"; path = "Pods/Target Support Files/Pods-intertview/Pods-intertview.debug.xcconfig"; sourceTree = "<group>"; };
 		563104B91D62A97E00B0E076 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		5655BB4DAF527694BCF1C39C /* Pods-intertview.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-intertview.release.xcconfig"; path = "Pods/Target Support Files/Pods-intertview/Pods-intertview.release.xcconfig"; sourceTree = "<group>"; };
+		565BBB201D6C7726004FC2E1 /* CountryCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryCode.swift; sourceTree = "<group>"; };
 		56641EC71D6314C6007905E4 /* AuthenticationModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationModel.swift; sourceTree = "<group>"; };
 		56641ECF1D631EBC007905E4 /* TokenKeyboard.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TokenKeyboard.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		56641ED11D631EBC007905E4 /* KeyboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 				56D41B211D6468BC00BFD4AE /* WikiFace.swift */,
 				56C0C1C61D6200B2003B13F9 /* textFieldExtension.swift */,
 				56C3AFD21D69DE8A00ECE020 /* InformationValidator.swift */,
+				565BBB201D6C7726004FC2E1 /* CountryCode.swift */,
 			);
 			name = Helper;
 			sourceTree = "<group>";
@@ -381,6 +384,7 @@
 				567FB25D1D67491B00C05BB2 /* MainViewController.swift in Sources */,
 				56D41B281D64A63C00BFD4AE /* ProfileViewController.swift in Sources */,
 				56D41B1E1D64638300BFD4AE /* UploadPictureViewContoller.swift in Sources */,
+				565BBB211D6C7726004FC2E1 /* CountryCode.swift in Sources */,
 				56C0C1B11D61F3F3003B13F9 /* AppDelegate.swift in Sources */,
 				56C0C1C51D61F555003B13F9 /* RegisterViewController.swift in Sources */,
 				56D41B241D646CE000BFD4AE /* ImageMasker.swift in Sources */,
